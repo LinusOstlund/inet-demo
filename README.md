@@ -1,10 +1,12 @@
 # TCP in Go with Docker and Goncurses
 
 Ett sätt att hantera Server och Client i Golang med Goncurses som gränssnitt. Docker hanterar dependencies för Goncurses.
-Detta lilla projekt gjorde för `inet` i kursen DD1362. Det är en spartansk demo som bryter mot många goda programmeringsprinciper. ** Var på er vakt! **
+Detta lilla projekt gjordes för `inet` i kursen DD1362 på KTH. Det är en spartansk demo som bryter mot många goda programmeringsprinciper. 
+
+**Var på er vakt!**
 
 ## Dockerfile
-För att köra, gå öppna två terminaler. För att det ska funka måste man specificera ett nätverk, vilket görs med `--network="host"`. På så sätt kommunicerar containerserna med varandra.
+För att köra, öppna två terminaler. En fallgrop för Dockernybörjaren är nätverkshantering. I Dockerfilerna specificera ett nätverk med `--network="host"`, där `host` är ett Docker-keyword. På så sätt kommunicerar containerserna med varandra över localhost. Se övriga kommentarer i Dockerfilerna.
 
 ```bash
 # Terminal 1
