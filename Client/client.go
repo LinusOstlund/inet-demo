@@ -1,15 +1,5 @@
 package main
 
-
-/*
-första gången vi kör Data är den init
-
-sen  sker uppdateringar på den
-
-Vill ha en map[*Clients]*Data
-
-for each client send out *Data
-*/
 import (
         "fmt"
         "net"
@@ -30,12 +20,6 @@ const (
   CMD_QUIT
 )
 
-/*
-type Client struct {
-  Pos Position
-}
-*/
-
 type Position struct {
   X, Y int
 }
@@ -44,38 +28,33 @@ type Command struct {
   Id           commandID
 }
 
-// TODO ska detta vara protocol och typ interface egentligen?
 type Data struct {
   Players	     map[string]Position
 }
 
 
-func main(){
-  arguments := os.Args
-  if len(arguments) == 1 {
-          fmt.Println("Please provide host:port.")
-          return
+func main() {
+    arguments := os.Args
+    if len(arguments) == 1 {
+            fmt.Println("Please provide host:port.")
+            return
   }
-  
-  stdscr, err := goncurses.Init()
-	if err != nil {
-		log.Fatal("init", err)
+    
+    stdscr, err := goncurses.Init()
+    if err != nil {
+      log.Fatal("init", err)
   }
   
   defer goncurses.End()
   
-
   stdscr.MovePrint(3, 0, "Welcome to Roguelike. You are the '@'")
   
 
   // Turns off echo of characters and cursor
   goncurses.Echo(false)
-  //fmt.Println("Hanna med H")
-
   goncurses.Cursor(0)
 	// Refresh() flushes output to the screen. Internally, it is the same as
 	// calling NoutRefresh() on the window followed by a call to Update()
-		
   stdscr.Refresh()
 
   CONNECT := arguments[1]
@@ -86,19 +65,16 @@ func main(){
           return
   }
 
-    // goddag
   stdscr.MovePrint(5,0,"Connection to server has been established")
   stdscr.Refresh()
 
-  /* Channels */
+  /* Channels and Go Routines */
   outgoing_ch := make(chan Command)
   incoming_ch := make(chan Data)
 
   go ReceiveData(connection, incoming_ch)
   go SendData(connection, outgoing_ch)
   
-
-  fmt.Println("Hanna")
   /* Listen to input */
   go func(){
     encoder := json.NewEncoder(connection)
@@ -151,7 +127,6 @@ func SendData(connection net.Conn, outgoing_ch <-chan Command){
   }
 }
 
-// cannot unmarshal object into Go struct field Data.Players of type []main.Client
 func ReceiveData(connection net.Conn, incoming_ch chan<- Data){
   for {
       d := json.NewDecoder(connection)
